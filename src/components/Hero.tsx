@@ -9,7 +9,6 @@ export default function Hero() {
 
   return (
     <section id="top" className="relative overflow-hidden">
-      {/* Soft summery background */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-leaf-50 via-cream-50 to-cream-50" />
       <div
         className="absolute -left-24 -top-24 -z-10 h-72 w-72 rounded-full bg-berry-100/50 blur-3xl"
@@ -21,7 +20,6 @@ export default function Hero() {
       />
 
       <Container className="relative grid items-center gap-12 pb-16 pt-28 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pb-24 lg:pt-36">
-        {/* Copy */}
         <div className="animate-fade-up text-center lg:text-left">
           <span className="inline-flex items-center gap-2 rounded-full border border-leaf-200 bg-white/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-leaf-700 shadow-sm">
             <Leaf className="h-4 w-4" />
@@ -76,7 +74,6 @@ export default function Hero() {
           </p>
         </div>
 
-        {/* Image */}
         <div className="relative mx-auto w-full max-w-md lg:max-w-none">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[2.2rem] bg-leaf-100 shadow-lift ring-1 ring-black/5">
             <img
@@ -90,26 +87,20 @@ export default function Hero() {
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-berry-900/10 to-transparent" />
           </div>
 
-          {/* Floating price badge — reflects config (null = contact us) */}
           <div className="absolute -bottom-5 -left-4 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-lift ring-1 ring-black/5 sm:-left-6">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-berry-50 text-berry-600">
               <Strawberry className="h-6 w-6" />
             </span>
             <div>
               <p className="text-lg font-bold leading-none text-berry-700">
-                {config.price100To999 != null
-                  ? `${config.currency}${config.price100To999} each`
-                  : "Get a quote"}
+                From {config.currency}10 each
               </p>
               <p className="mt-1 text-xs font-medium text-bark-400">
-                {config.price100To999 != null
-                  ? `${config.midTierMin}+ plants`
-                  : "Pricing on request"}
+                Volume pricing · 1000+
               </p>
             </div>
           </div>
 
-          {/* Floating WhatsApp chip */}
           <a
             href={waHref}
             target="_blank"
