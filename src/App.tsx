@@ -15,6 +15,8 @@ import WhatsAppCTA from "./components/WhatsAppCTA";
 import FinalCTA from "./components/FinalCTA";
 import Footer from "./components/Footer";
 import Enquiries from "./components/Enquiries";
+import Terms from "./components/Terms";
+import Privacy from "./components/Privacy";
 
 /* ---- Minimal hash router: "/enquiries" shows the local enquiries view ---- */
 function useHashRoute() {
@@ -84,13 +86,19 @@ export default function App() {
   const hash = useHashRoute();
 
   useEffect(() => {
-    if (hash === "" || hash === "#/" || hash === "#/enquiries") {
+    if (hash === "" || hash === "#/" || hash === "#/enquiries" || hash === "#/terms" || hash === "#/privacy") {
       window.scrollTo(0, 0);
     }
   }, [hash]);
 
   if (hash === "#/enquiries") {
     return <Enquiries />;
+  }
+  if (hash === "#/terms") {
+    return <Terms />;
+  }
+  if (hash === "#/privacy") {
+    return <Privacy />;
   }
 
   return <Landing />;
