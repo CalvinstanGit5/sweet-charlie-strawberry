@@ -96,11 +96,19 @@ export default function Footer() {
         <div className="flex flex-col items-center justify-between gap-3 border-t border-cream-300 py-6 text-xs text-bark-400 sm:flex-row">
           <p>
             © {year} {config.businessName}. Estimates are non-binding; prices and
-            availability subject to change.
+            availability subject to change. T&Cs apply.
           </p>
-          <a href="#/enquiries" className="underline decoration-dotted hover:text-berry-600">
-            Saved enquiries (this device only)
-          </a>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <a href="#/terms" className="underline decoration-dotted hover:text-berry-600">
+              Terms & Conditions
+            </a>
+            <a href="#/privacy" className="underline decoration-dotted hover:text-berry-600">
+              Privacy
+            </a>
+            <a href="#/enquiries" className="underline decoration-dotted hover:text-berry-600">
+              Saved enquiries
+            </a>
+          </div>
         </div>
       </Container>
     </footer>
