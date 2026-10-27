@@ -2,18 +2,6 @@
  * IMAGE MANIFEST
  * ------------------------------------------------------------------
  * Maps semantic slots to files inside /public/images/strawberries/.
- *
- * To swap or add a photo: drop the file into the matching folder under
- * public/images/strawberries/<folder>/ and update the path below.
- * No component code needs to change.
- *
- * Folder structure:
- *   public/images/strawberries/
- *     hero/          -> big hero imagery
- *     plants/        -> plants, seedlings, runners
- *     fruit/         -> close-up fruit / harvest baskets
- *     promotional/   -> wide field / bulk scenes
- *     lifestyle/     -> people, hands, gardens
  */
 
 const base = "/images/strawberries";
@@ -26,7 +14,8 @@ export type ImageSlot =
   | "fruitSecondary"
   | "bulk"
   | "lifestyle"
-  | "icon";
+  | "icon"
+  | "mascot";
 
 export const images: Record<ImageSlot, { src: string; alt: string }> = {
   hero: {
@@ -58,8 +47,12 @@ export const images: Record<ImageSlot, { src: string; alt: string }> = {
     alt: "Hands gently holding freshly picked Sweet Charlie strawberries in a summer garden",
   },
   icon: {
-    src: `${base}/icon.png`,
-    alt: "Sweet Charlie strawberry",
+    src: `${base}/mascot.png`,
+    alt: "Sweet Charlie mascot",
+  },
+  mascot: {
+    src: `${base}/mascot.png`,
+    alt: "Sweet Charlie strawberry mascot holding a potted plant",
   },
 };
 
