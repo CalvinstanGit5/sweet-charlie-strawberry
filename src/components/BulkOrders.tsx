@@ -5,7 +5,7 @@ import { CheckCircle, Package } from "./Icons";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
 
 const points = [
-  `${config.bulkThreshold.toLocaleString("en-ZA")}+ plants — special bulk enquiry`,
+  "1000+ plants — volume rate R10 each",
   "Farms, nurseries & resellers",
   "Greenhouse and tunnel production",
 ];
@@ -17,7 +17,6 @@ export default function BulkOrders() {
     <section id="bulk" className="bg-leaf-800 py-20 text-cream-50 sm:py-24">
       <Container>
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Copy */}
           <div>
             <span className="inline-flex items-center gap-2 rounded-full bg-leaf-700/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-leaf-100">
               <Package className="h-4 w-4" />
@@ -27,10 +26,8 @@ export default function BulkOrders() {
               Planting in volume?
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-cream-200/90">
-              We supply farms, nurseries, resellers and greenhouse growers. For
-              larger orders we prepare a customised quotation based on your
-              quantity, variety mix and delivery requirements — no fixed online
-              price.
+              We supply farms, nurseries, resellers and greenhouse growers. Orders of 1000+
+              plants are R10 each. WhatsApp us for large mixed or staged deliveries.
             </p>
 
             <ul className="mt-7 space-y-3">
@@ -51,17 +48,12 @@ export default function BulkOrders() {
               >
                 Request a bulk quote
               </a>
-              <LinkButton
-                href="#enquiry"
-                variant="onDark"
-                size="lg"
-              >
+              <LinkButton href="#enquiry" variant="onDark" size="lg">
                 Use the quote form
               </LinkButton>
             </div>
           </div>
 
-          {/* Image */}
           <div className="relative">
             <div className="aspect-[5/4] overflow-hidden rounded-[2rem] bg-leaf-900 shadow-lift ring-1 ring-white/10">
               <img
@@ -73,10 +65,8 @@ export default function BulkOrders() {
               />
             </div>
             <div className="absolute -bottom-5 left-6 rounded-2xl bg-cream-50 px-5 py-3 shadow-lift">
-              <p className="text-2xl font-bold text-berry-600">
-                {config.bulkThreshold.toLocaleString("en-ZA")}+
-              </p>
-              <p className="text-xs font-medium text-bark-400">plants per bulk order</p>
+              <p className="text-2xl font-bold text-berry-600">R10 each</p>
+              <p className="text-xs font-medium text-bark-400">1000+ plants volume rate</p>
             </div>
           </div>
         </div>
