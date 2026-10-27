@@ -33,17 +33,10 @@ export type EnquiryInput = {
   email: string;
   location: string;
   quantity: number;
-  /**
-   * Manual price per plant (R). Used by the quote creator —
-   * overrides tier defaults so each quote can be priced freely.
-   */
-  unitPrice: number;
   orderType: OrderType;
   delivery: DeliveryPreference;
-  /** Preloaded hub id, e.g. "centurion", or "other". */
   deliveryHub: string;
   deliveryAddress: string;
-  /** Optional custom one-way km when hub is "other". */
   customOneWayKm: number;
   notes: string;
   bulkDiscussion: boolean;
@@ -63,42 +56,23 @@ export type DeliveryQuote = {
 
 /** The priced result of a quote calculation. */
 export type QuoteResult = {
-  /** Which pricing tier the quantity falls into. */
-  tier: "under-100" | "100-999" | "bulk";
+  tier: string;
   quantity: number;
-  /** Price per plant, or null when not applicable (contact-us / bulk). */
-  pricePerPlant: number | null;
-  /** Plant subtotal, or null when there is no fixed price. */
-  subtotal: number | null;
-  /** Delivery estimate (null cost when not applicable). */
+  pricePerPlant: number;
+  subtotal: number;
   delivery: DeliveryQuote;
-  /** Grand total = plant subtotal + delivery (when both known). */
   grandTotal: number | null;
-  /** True for 1000+ orders (special bulk enquiry). */
   isBulk: boolean;
-  /** True for under-100 orders with no configured price. */
   isContactUs: boolean;
-  /** Short human label, e.g. "R15 each" or "Special bulk enquiry". */
   priceLabel: string;
-  /** Delivery note to always display. */
   deliveryNote: string;
 };
 
 /** A fully stored enquiry, persisted to localStorage. */
 export type StoredEnquiry = EnquiryInput & {
   ref: string;
-  createdAt: string; // ISO timestamp
-  config: Pick<
-    SiteConfig,
-    | "productName"
-    | "currency"
-    | "priceUnder100"
-    | "price100To999"
-    | "priceBulk"
-    | "midTierMin"
-    | "bulkThreshold"
-    | "quotePrefix"
-  >;
+  createdAt: string;
+  config: Pick<SiteConfig, "productName" | "currency" | "quotePrefix">;
   quote: QuoteResult;
   status: EnquiryStatus;
 };
