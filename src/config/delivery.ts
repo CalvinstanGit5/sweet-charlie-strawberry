@@ -1,12 +1,6 @@
 /**
- * Delivery costing — AA-style operating rate for our delivery vehicle.
- *
- * Vehicle: Toyota Hilux 3.0 4×4 (2012)
- * Rate basis: AA-style large bakkie / >2500cc operating cost (2026 estimates).
- * DriveCost AA large band ≈ R6.42/km; we use R6.50/km all-in
- * (fuel, maintenance, tyres, wear). One-way only is charged.
- *
- * Distances are one-way km from collection (Benoni).
+ * Delivery costing — per-km rate for our delivery buggy.
+ * One-way from Benoni. R6.50/km, minimum fee applies.
  */
 
 export type DeliveryHub = {
@@ -17,7 +11,7 @@ export type DeliveryHub = {
   area?: string;
 };
 
-/** Pre-loaded drop hubs (Gauteng & surrounds). Sorted roughly by distance. */
+/** Pre-loaded drop hubs (Gauteng & surrounds). */
 export const DELIVERY_HUBS: DeliveryHub[] = [
   { id: "benoni", label: "Benoni (collection)", oneWayKm: 0, area: "Ekurhuleni" },
   { id: "boksburg", label: "Boksburg", oneWayKm: 12, area: "Ekurhuleni" },
@@ -41,11 +35,8 @@ export const DELIVERY_HUBS: DeliveryHub[] = [
 ];
 
 export type DeliveryConfig = {
-  /** AA-style rate per km for Hilux 3L 4×4 2012 (operating cost). */
   ratePerKm: number;
-  /** Charge round-trip (to hub and back to Benoni). false = one-way only. */
   roundTrip: boolean;
-  /** Minimum delivery charge when distance is short. */
   minimumFee: number;
   vehicleLabel: string;
   rateNote: string;
@@ -55,15 +46,11 @@ export const deliveryConfig: DeliveryConfig = {
   ratePerKm: 6.5,
   roundTrip: false,
   minimumFee: 150,
-  vehicleLabel: "Toyota Hilux 3.0 4×4 (2012)",
+  vehicleLabel: "delivery buggy",
   rateNote:
-    "Based on AA-style operating cost for a large bakkie / >2500 cc (≈ R6.50/km, 2026). One-way from Benoni.",
+    "R6.50/km one-way from Benoni in our delivery buggy (minimum fee applies).",
 };
 
-/**
- * Calculate delivery cost for a hub (or custom one-way km).
- * Collection / courier / not-sure → no vehicle delivery cost.
- */
 export function calculateDeliveryCost(
   preference: "Collection" | "Delivery" | "Courier" | "Not sure",
   oneWayKm: number,
@@ -101,9 +88,7 @@ export function calculateDeliveryCost(
     chargeableKm,
     ratePerKm: deliveryConfig.ratePerKm,
     cost,
-    label: deliveryConfig.roundTrip
-      ? `${oneWayKm} km one-way · ${chargeableKm} km return @ R${deliveryConfig.ratePerKm}/km`
-      : `${oneWayKm} km one-way @ R${deliveryConfig.ratePerKm}/km`,
+    label: `${oneWayKm} km one-way @ R${deliveryConfig.ratePerKm}/km`,
   };
 }
 
