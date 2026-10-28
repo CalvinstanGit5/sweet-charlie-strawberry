@@ -46,20 +46,16 @@ export default function QuoteResult({
     timeStyle: "short",
   });
 
-  const totalLabel = quote.isBulk
-    ? "Special bulk enquiry"
-    : quote.isContactUs
-      ? "To be confirmed"
-      : quote.grandTotal != null
-        ? formatMoney(quote.grandTotal)
-        : formatMoney(quote.subtotal ?? 0);
+  const totalLabel =
+    quote.grandTotal != null
+      ? formatMoney(quote.grandTotal)
+      : formatMoney(quote.subtotal ?? 0);
 
   return (
     <div
       id="quote-result"
       className="scroll-mt-24 overflow-hidden rounded-3xl border border-leaf-200 bg-white shadow-lift"
     >
-      {/* Header */}
       <div className="relative bg-berry-600 px-6 py-6 text-white sm:px-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -81,18 +77,6 @@ export default function QuoteResult({
       </div>
 
       <div className="px-6 py-6 sm:px-8">
-        {quote.isBulk && (
-          <div className="mb-5 rounded-2xl border border-leaf-200 bg-leaf-50 p-4 text-sm leading-relaxed text-leaf-800">
-            <strong className="font-semibold">Your order qualifies as a special bulk enquiry.</strong>{" "}
-            Please contact us so we can prepare a customised quotation.
-          </div>
-        )}
-        {quote.isContactUs && !quote.isBulk && (
-          <div className="mb-5 rounded-2xl border border-berry-100 bg-berry-50 p-4 text-sm leading-relaxed text-berry-800">
-            For orders under 100 plants, please contact us for current pricing.
-          </div>
-        )}
-
         <dl className="grid gap-x-10 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <Row label="Customer" value={enquiry.name} strong />
@@ -108,26 +92,14 @@ export default function QuoteResult({
           <Row label="Product" value={config.productName} />
           <Row
             label="Plant price"
-            value={
-              quote.isBulk || quote.isContactUs
-                ? "To be confirmed"
-                : `${formatMoney(quote.pricePerPlant ?? 0)} each`
-            }
+            value={`${formatMoney(quote.pricePerPlant ?? 0)} each`}
           />
-          <Row
-            label="Plant subtotal"
-            value={
-              quote.isBulk || quote.isContactUs ? "—" : formatMoney(quote.subtotal ?? 0)
-            }
-          />
+          <Row label="Plant subtotal" value={formatMoney(quote.subtotal ?? 0)} />
           <Row label="Delivery / collection" value={enquiry.delivery} />
           {delivery.applicable && delivery.cost !== null ? (
             <>
               <Row label="Delivery hub" value={delivery.hubLabel} />
-              <Row
-                label="Delivery estimate"
-                value={formatMoney(delivery.cost)}
-              />
+              <Row label="Delivery estimate" value={formatMoney(delivery.cost)} />
             </>
           ) : (
             <Row
@@ -135,7 +107,9 @@ export default function QuoteResult({
               value={
                 enquiry.delivery === "Collection"
                   ? "No charge"
-                  : "To be confirmed"
+                  : enquiry.delivery === "Delivery"
+                    ? "Enquire — confirm hub/distance on WhatsApp"
+                    : "To be confirmed"
               }
             />
           )}
@@ -161,45 +135,6 @@ export default function QuoteResult({
             <p className="mt-1 whitespace-pre-line text-sm text-bark-600">{enquiry.notes}</p>
           </div>
         )}
-
-        {/* Banking details */}
-        <div className="mt-5 overflow-hidden rounded-2xl border border-cream-200 bg-cream-50">
-          <div className="border-b border-cream-200 bg-white px-4 py-3">
-            <p className="text-xs font-bold uppercase tracking-[0.15em] text-leaf-700">
-              Banking details — payment
-            </p>
-          </div>
-          <dl className="grid gap-x-6 px-4 py-3 sm:grid-cols-2">
-            {(
-              [
-                ["Account holder", config.banking.accountHolder],
-                ["Bank", config.banking.bank],
-                ["Account type", config.banking.accountType],
-                ["Branch code", config.banking.branchCode],
-                ["Account number", config.banking.accountNumber],
-                ["Reference", enquiry.ref],
-              ] as const
-            ).map(([label, value]) => (
-              <div
-                key={label}
-                className="flex items-baseline justify-between gap-3 border-b border-cream-200/80 py-2 last:border-0 sm:last:border-b"
-              >
-                <dt className="text-xs text-bark-400">{label}</dt>
-                <dd
-                  className={`text-right text-sm font-medium ${
-                    label === "Reference" ? "font-bold text-berry-700" : "text-bark-600"
-                  }`}
-                >
-                  {value}
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <p className="border-t border-cream-200 px-4 py-2.5 text-xs text-bark-400">
-            Please use quote reference <strong className="text-bark-600">{enquiry.ref}</strong> when
-            making payment.
-          </p>
-        </div>
 
         <p className="mt-5 rounded-xl border border-berry-100 bg-berry-50/60 p-4 text-xs leading-relaxed text-bark-500">
           {DISCLAIMER}
