@@ -1,19 +1,12 @@
 /**
  * SINGLE SOURCE OF TRUTH
- * ------------------------------------------------------------------
- * Pricing is LOCKED. Customers cannot change unit prices.
- * Estimates are non-binding until availability is confirmed on WhatsApp.
- * Banking details are for invoices only — not shown on public quotes.
+ * Pricing is LOCKED. Banking details are for invoices only — not quotes.
  */
 
 export type PriceTier = {
-  /** Inclusive min quantity for this tier. */
   minQty: number;
-  /** Inclusive max quantity (null = no upper limit). */
   maxQty: number | null;
-  /** Rand per plant. */
   pricePerPlant: number;
-  /** Short label for cards, e.g. "1 – 19 plants". */
   label: string;
 };
 
@@ -27,7 +20,6 @@ export type BankingDetails = {
 
 export type SiteConfig = {
   productName: string;
-  /** Locked public price tiers (quantity bands). */
   priceTiers: PriceTier[];
   whatsappNumber: string;
   whatsappDisplay: string;
@@ -37,14 +29,12 @@ export type SiteConfig = {
   quotePrefix: string;
   currency: string;
   siteUrl: string;
-  /** Banking — invoices only, not quotes. */
   banking: BankingDetails;
 };
 
 export const config: SiteConfig = {
   productName: "Sweet Charlie Strawberry Plants",
 
-  // ---- LOCKED plant pricing (do not expose as editable on the form) --
   priceTiers: [
     { minQty: 1, maxQty: 19, pricePerPlant: 25, label: "1 – 19 plants" },
     { minQty: 20, maxQty: 99, pricePerPlant: 20, label: "20 – 99 plants" },
@@ -52,14 +42,13 @@ export const config: SiteConfig = {
     { minQty: 500, maxQty: 999, pricePerPlant: 12, label: "500 – 999 plants" },
     { minQty: 1000, maxQty: null, pricePerPlant: 10, label: "1000+ plants" },
   ],
-  // -------------------------------------------------------------------
 
   whatsappNumber: "27725742448",
   whatsappDisplay: "072 574 2448",
   businessName: "Sweet Charlie Strawberry Plants",
   collectionLocation: "Benoni, Gauteng",
   deliveryMessage:
-    "Delivery priced on AA-style operating cost for our Hilux 3.0 4×4 (R6.50/km one-way from Benoni). Courier costs confirmed separately.",
+    "Delivery from Benoni in our buggy at R6.50/km one-way (minimum fee applies). Courier costs confirmed separately. Exact fee confirmed when you choose a hub or we agree distance.",
   quotePrefix: "SC",
   currency: "R",
   siteUrl: "https://www.sweetcharlie.co.za",
@@ -72,7 +61,6 @@ export const config: SiteConfig = {
   },
 };
 
-/** Resolve locked unit price for a quantity. */
 export function priceForQuantity(qty: number): {
   pricePerPlant: number;
   tierLabel: string;
