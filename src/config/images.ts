@@ -1,7 +1,8 @@
 /**
  * IMAGE MANIFEST
  * ------------------------------------------------------------------
- * Maps semantic slots to files inside /public/images/strawberries/.
+ * icon = small header/footer logo (not the mascot)
+ * mascot = character art for overlays / fun placements later
  */
 
 const base = "/images/strawberries";
@@ -47,8 +48,8 @@ export const images: Record<ImageSlot, { src: string; alt: string }> = {
     alt: "Hands gently holding freshly picked Sweet Charlie strawberries in a summer garden",
   },
   icon: {
-    src: `${base}/mascot.png`,
-    alt: "Sweet Charlie mascot",
+    src: `${base}/icon.png`,
+    alt: "Sweet Charlie logo",
   },
   mascot: {
     src: `${base}/mascot.png`,
