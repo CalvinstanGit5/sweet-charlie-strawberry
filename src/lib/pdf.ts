@@ -3,10 +3,6 @@ import config from "@/config/site";
 import { formatMoney } from "./quote";
 import type { StoredEnquiry } from "./types";
 
-/**
- * Generate a clean, professional one-page quote PDF and trigger a download.
- * Client-side only — no server involved.
- */
 export function generateQuotePDF(enquiry: StoredEnquiry): void {
   const { quote } = enquiry;
   const delivery = quote.delivery ?? {
@@ -21,12 +17,11 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
   };
 
   const doc = new jsPDF({ unit: "mm", format: "a4" });
-  const pageW = doc.internal.pageSize.getWidth(); // 210
+  const pageW = doc.internal.pageSize.getWidth();
   const margin = 18;
   const contentW = pageW - margin * 2;
   const right = pageW - margin;
 
-  // Palette
   const berry: [number, number, number] = [193, 18, 43];
   const berryDark: [number, number, number] = [125, 14, 32];
   const leaf: [number, number, number] = [47, 125, 41];
@@ -35,20 +30,16 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
   const cream: [number, number, number] = [253, 241, 222];
   const line: [number, number, number] = [230, 219, 203];
 
-  // ---- Header band -------------------------------------------------
   doc.setFillColor(...berry);
   doc.rect(0, 0, pageW, 32, "F");
-
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
   doc.text(config.businessName, margin, 16);
-
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(255, 235, 238);
   doc.text("Fresh strawberry plants  ·  South Africa", margin, 23);
-
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(255, 255, 255);
@@ -57,7 +48,6 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
   doc.setFontSize(9);
   doc.text(enquiry.ref, right, 21, { align: "right" });
 
-  // ---- "Estimate, not an invoice" banner ---------------------------
   doc.setDrawColor(...berry);
   doc.setLineWidth(0.4);
   doc.setFillColor(255, 241, 242);
@@ -67,14 +57,12 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
   doc.setFontSize(10);
   doc.text("ESTIMATE — NOT AN INVOICE", pageW / 2, 43, { align: "center" });
 
-  // ---- Meta (date + prepared for) ----------------------------------
   let y = 58;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
   doc.setTextColor(...muted);
   doc.text("DATE", margin, y);
   doc.text("PREPARED FOR", margin + 70, y);
-
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.setTextColor(...ink);
@@ -90,14 +78,12 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
   doc.setDrawColor(...line);
   doc.line(margin, y, right, y);
 
-  // ---- Customer information ----------------------------------------
   y += 8;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
   doc.setTextColor(...leaf);
   doc.text("CUSTOMER INFORMATION", margin, y);
   y += 7;
-
   doc.setFontSize(10);
   const infoRows: [string, string][] = [
     ["Name", enquiry.name],
@@ -117,7 +103,6 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
     y += 6;
   }
 
-  // ---- Line items ---------------------------------------------------
   y += 6;
   doc.setFillColor(...cream);
   doc.rect(margin, y, contentW, 9, "F");
@@ -132,28 +117,15 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
   y += 9;
   doc.setDrawColor(...line);
   doc.line(margin, y, right, y);
-
   y += 7;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.setTextColor(...ink);
   doc.text(config.productName, margin + 3, y);
   doc.text(String(enquiry.quantity), margin + 92, y, { align: "right" });
+  doc.text(formatMoney(quote.pricePerPlant ?? 0), margin + 122, y, { align: "right" });
+  doc.text(formatMoney(quote.subtotal ?? 0), right - 3, y, { align: "right" });
 
-  const priceText = quote.isBulk
-    ? "—"
-    : quote.isContactUs
-      ? "On request"
-      : formatMoney(quote.pricePerPlant ?? 0);
-  const subtotalText = quote.isBulk
-    ? "Bulk quote"
-    : quote.isContactUs
-      ? "On request"
-      : formatMoney(quote.subtotal ?? 0);
-  doc.text(priceText, margin + 122, y, { align: "right" });
-  doc.text(subtotalText, right - 3, y, { align: "right" });
-
-  // ---- Delivery -----------------------------------------------------
   y += 10;
   doc.setDrawColor(...line);
   doc.line(margin, y, right, y);
@@ -194,47 +166,31 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
     const deliveryWrapped = doc.splitTextToSize(
       enquiry.delivery === "Collection"
         ? "Collection from Benoni — no delivery charge."
-        : "Delivery/courier cost to be confirmed based on location and requirements.",
+        : "Delivery fee to be confirmed once hub/distance is agreed on WhatsApp.",
       contentW,
     );
     doc.text(deliveryWrapped, margin, y);
     y += deliveryWrapped.length * 5;
   }
 
-  // ---- Estimated total box -----------------------------------------
   y += 6;
-  const boxH = quote.isBulk ? 22 : 18;
+  const boxH = 18;
   doc.setFillColor(...berry);
   doc.rect(margin, y, contentW, boxH, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.text("ESTIMATED TOTAL", margin + 4, y + 8);
-  doc.setFontSize(quote.isBulk ? 11 : 14);
-  if (quote.isBulk) {
-    doc.text("SPECIAL BULK ENQUIRY", right - 4, y + 8, { align: "right" });
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.text(
-      "1000+ plants — a customised quotation will be prepared for you.",
-      margin + 4,
-      y + 16,
-    );
-  } else if (quote.isContactUs) {
-    doc.text("TO BE CONFIRMED", right - 4, y + 9, { align: "right" });
-  } else {
-    const total =
-      quote.grandTotal !== null ? quote.grandTotal : (quote.subtotal ?? 0);
-    doc.text(formatMoney(total), right - 4, y + 9, { align: "right" });
-  }
+  doc.setFontSize(14);
+  const total =
+    quote.grandTotal !== null ? quote.grandTotal : (quote.subtotal ?? 0);
+  doc.text(formatMoney(total), right - 4, y + 9, { align: "right" });
 
   y += boxH + 4;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(...muted);
-  if (quote.isBulk) {
-    doc.text("Delivery/courier not included — to be confirmed.", margin, y);
-  } else if (delivery.applicable && delivery.cost !== null) {
+  if (delivery.applicable && delivery.cost !== null) {
     doc.text(
       `Includes plant subtotal ${formatMoney(quote.subtotal ?? 0)} + delivery ${formatMoney(delivery.cost)}.`,
       margin,
@@ -246,7 +202,6 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
     doc.text("Delivery/courier cost to be confirmed separately.", margin, y);
   }
 
-  // ---- Notes --------------------------------------------------------
   if (enquiry.notes.trim()) {
     y += 10;
     doc.setFont("helvetica", "bold");
@@ -262,7 +217,6 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
     y += noteLines.length * 5;
   }
 
-  // ---- Contact ------------------------------------------------------
   y += 12;
   doc.setDrawColor(...line);
   doc.line(margin, y, right, y);
@@ -278,58 +232,19 @@ export function generateQuotePDF(enquiry: StoredEnquiry): void {
   doc.text(`WhatsApp: ${config.whatsappDisplay}`, margin, y);
   doc.text(`Collection: ${config.collectionLocation}`, margin + 70, y);
 
-  // ---- Banking details ----------------------------------------------
-  const bank = config.banking;
-  y += 12;
-  doc.setDrawColor(...line);
-  doc.line(margin, y, right, y);
-  y += 7;
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(9);
-  doc.setTextColor(...leaf);
-  doc.text("BANKING DETAILS — PAYMENT", margin, y);
-  y += 7;
-
-  const bankRows: [string, string][] = [
-    ["Account holder", bank.accountHolder],
-    ["Bank", bank.bank],
-    ["Account type", bank.accountType],
-    ["Branch code", bank.branchCode],
-    ["Account number", bank.accountNumber],
-    ["Reference", enquiry.ref],
-  ];
-  doc.setFontSize(9);
-  for (const [label, value] of bankRows) {
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(...muted);
-    doc.text(label, margin, y);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(...ink);
-    doc.text(value, margin + 42, y);
-    y += 5.5;
-  }
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(8);
-  doc.setTextColor(...muted);
-  y += 5.5;
-  doc.text("Please use the quote reference above when making payment.", margin, y);
-
-  // ---- Disclaimer (flow after content — never overlap banking) ------
   const disclaimer =
-    "This is a non-binding estimate only. Final pricing, plant availability and delivery costs will be confirmed by us before any order is accepted. Prices are subject to change.";
+    "This is a non-binding estimate only. Final pricing, plant availability and delivery costs will be confirmed by us on WhatsApp before any order is accepted. Living plants are sold subject to our T&Cs. Prices subject to change.";
   doc.setFontSize(7.5);
   doc.setTextColor(...muted);
   const disclaimerLines = doc.splitTextToSize(disclaimer, contentW);
   const pageH = doc.internal.pageSize.getHeight();
   const footerReserve = 16;
-  y += 10;
-  // If content already near the bottom, start a second page for the disclaimer
+  y += 14;
   if (y + disclaimerLines.length * 4 > pageH - footerReserve) {
     doc.addPage();
     y = margin + 10;
   }
   doc.text(disclaimerLines, margin, y);
 
-  // ---- Save ---------------------------------------------------------
   doc.save(`Sweet-Charlie-Quote-${enquiry.ref}.pdf`);
 }
