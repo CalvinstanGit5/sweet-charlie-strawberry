@@ -1,14 +1,16 @@
 import config from "@/config/site";
 import { Container, LinkButton, SectionHeading } from "./ui";
 import { Check, Leaf } from "./Icons";
+import MascotPeek from "./MascotPeek";
 
 export default function Pricing() {
   const { currency, priceTiers } = config;
   const featuredIndex = priceTiers.findIndex((t) => t.minQty === 100);
 
   return (
-    <section id="pricing" className="bg-white py-20 sm:py-24">
-      <Container>
+    <section id="pricing" className="relative overflow-hidden bg-white py-20 sm:py-24">
+      <Container className="relative">
+        <MascotPeek pose="purchase" corner="tr" size="md" className="hidden lg:block -translate-y-2" />
         <SectionHeading
           eyebrow="Simple pricing"
           title="Clear, locked pricing"
