@@ -4,14 +4,12 @@ import type { StoredEnquiry } from "./types";
 
 /**
  * Build a wa.me click-to-chat link with a pre-filled message.
- * This only opens WhatsApp with the text ready to send — the site
- * never sends anything silently on the user's behalf.
+ * Banking details are NOT included — invoices only.
  */
 function waLink(message: string): string {
   return `https://wa.me/${config.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
-/** Simple, general enquiry message for the top-level WhatsApp CTAs. */
 export function buildGeneralWhatsAppLink(): string {
   const message = [
     `Hi, I would like to enquire about ${config.productName}.`,
@@ -23,22 +21,15 @@ export function buildGeneralWhatsAppLink(): string {
     "Delivery/collection:",
     "Additional requirements:",
     "",
-    "I would like to receive a quotation.",
+    "Please confirm availability.",
   ].join("\n");
   return waLink(message);
 }
 
-/** Detailed message generated from a completed quote/enquiry. */
 export function buildQuoteWhatsAppLink(enquiry: StoredEnquiry): string {
   const { quote, quantity, orderType, delivery, deliveryAddress, notes } = enquiry;
 
-  const priceLine = quote.isBulk
-    ? "Special bulk enquiry"
-    : quote.isContactUs
-      ? "To be confirmed"
-      : `${formatMoney(quote.pricePerPlant ?? 0)} per plant (est. ${formatMoney(
-          quote.subtotal ?? 0,
-        )})`;
+  const priceLine = `${formatMoney(quote.pricePerPlant)} per plant (${quote.tier}) · plants ${formatMoney(quote.subtotal)}`;
 
   const d = quote.delivery;
   const deliveryLines: string[] = [`Delivery/collection: ${delivery}`];
@@ -47,23 +38,29 @@ export function buildQuoteWhatsAppLink(enquiry: StoredEnquiry): string {
     deliveryLines.push(
       `Delivery estimate: ${formatMoney(d.cost)} (${d.label})`,
     );
+  } else if (delivery === "Delivery") {
+    deliveryLines.push(
+      "Delivery: fee to be confirmed once hub/distance is agreed",
+    );
   }
   if (deliveryAddress) deliveryLines.push(`Delivery address: ${deliveryAddress}`);
 
   const totalLine =
-    quote.isBulk || quote.isContactUs
-      ? null
-      : quote.grandTotal !== null
-        ? `Estimated total: ${formatMoney(quote.grandTotal)}`
-        : `Estimated plant total: ${formatMoney(quote.subtotal ?? 0)}`;
+    quote.grandTotal !== null
+      ? `Estimated total: ${formatMoney(quote.grandTotal)}`
+      : `Estimated plant total: ${formatMoney(quote.subtotal)}` +
+        (delivery === "Delivery" && !(d?.cost != null)
+          ? " (delivery fee still to confirm)"
+          : "");
 
-  const bank = config.banking;
   const lines = [
-    `Hi, I would like to enquire about ${config.productName}.`,
+    `Hi, I would like to order ${config.productName}.`,
     "",
     `Quote ref: ${enquiry.ref}`,
     `Name: ${enquiry.name}`,
     enquiry.business ? `Business: ${enquiry.business}` : "",
+    `WhatsApp: ${enquiry.whatsapp}`,
+    enquiry.email ? `Email: ${enquiry.email}` : "",
     `Location: ${enquiry.location}`,
     `Quantity: ${quantity} plants`,
     `Order type: ${orderType}`,
@@ -72,15 +69,7 @@ export function buildQuoteWhatsAppLink(enquiry: StoredEnquiry): string {
     totalLine,
     notes ? `Additional requirements: ${notes}` : "",
     "",
-    "Banking details for payment:",
-    `Account holder: ${bank.accountHolder}`,
-    `Bank: ${bank.bank}`,
-    `Account type: ${bank.accountType}`,
-    `Branch code: ${bank.branchCode}`,
-    `Account number: ${bank.accountNumber}`,
-    `Reference: ${enquiry.ref}`,
-    "",
-    "I would like to receive a quotation.",
+    "Please confirm availability. Estimate is non-binding. T&Cs apply.",
   ].filter(Boolean);
 
   return waLink(lines.join("\n"));

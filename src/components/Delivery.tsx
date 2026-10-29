@@ -12,7 +12,7 @@ const options = [
   {
     icon: Truck,
     title: "Delivery",
-    body: `We deliver with our ${deliveryConfig.vehicleLabel} at R${deliveryConfig.ratePerKm}/km one-way (AA-style rate).`,
+    body: `We deliver in our buggy at R${deliveryConfig.ratePerKm}/km one-way from Benoni.`,
   },
   {
     icon: Package,
@@ -37,7 +37,7 @@ export default function Delivery() {
         <SectionHeading
           eyebrow="Delivery & collection"
           title="Getting your plants"
-          subtitle="Choose collection, delivery or courier. Delivery is priced from Benoni using an AA-style operating rate for our Hilux."
+          subtitle="Choose collection, delivery or courier. Delivery is priced from Benoni at a simple per-km rate for our buggy."
         />
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -55,7 +55,6 @@ export default function Delivery() {
           ))}
         </div>
 
-        {/* Rate card */}
         <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-leaf-100 bg-leaf-50 p-6">
           <div className="flex items-start gap-3">
             <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-leaf-600" />
@@ -64,7 +63,7 @@ export default function Delivery() {
                 Collection: {config.collectionLocation}
               </p>
               <p className="mt-1 text-sm leading-relaxed text-bark-500">
-                Delivery vehicle: <strong>{deliveryConfig.vehicleLabel}</strong>
+                Delivered by: <strong>our buggy</strong>
                 {" · "}
                 Rate: <strong>R{deliveryConfig.ratePerKm}/km one-way</strong>
                 {" · "}
