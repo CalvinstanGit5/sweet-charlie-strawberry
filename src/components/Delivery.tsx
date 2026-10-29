@@ -2,6 +2,7 @@ import config from "@/config/site";
 import { DELIVERY_HUBS, deliveryConfig } from "@/config/delivery";
 import { Container, SectionHeading } from "./ui";
 import { HelpCircle, MapPin, Package, Store, Truck } from "./Icons";
+import MascotPeek from "./MascotPeek";
 
 const options = [
   {
@@ -32,8 +33,9 @@ const featuredHubs = DELIVERY_HUBS.filter(
 
 export default function Delivery() {
   return (
-    <section id="delivery" className="py-20 sm:py-24">
-      <Container>
+    <section id="delivery" className="relative overflow-hidden py-20 sm:py-24">
+      <Container className="relative">
+        <MascotPeek pose="delivery" corner="tr" size="md" className="hidden sm:block opacity-95" />
         <SectionHeading
           eyebrow="Delivery & collection"
           title="Getting your plants"
