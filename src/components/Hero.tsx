@@ -2,6 +2,7 @@ import config from "@/config/site";
 import { images } from "@/config/images";
 import { Container, LinkButton, WhatsAppButton } from "./ui";
 import { Leaf, Strawberry, WhatsApp } from "./Icons";
+import MascotPeek from "./MascotPeek";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
 
 export default function Hero() {
@@ -86,6 +87,7 @@ export default function Hero() {
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-berry-900/10 to-transparent" />
           </div>
+          <MascotPeek pose="welcome" corner="bl" size="lg" className="-translate-x-[12%] translate-y-[4%]" />
 
           <div className="absolute -bottom-5 -left-4 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-lift ring-1 ring-black/5 sm:-left-6">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-berry-50 text-berry-600">
