@@ -1,6 +1,7 @@
 import { images } from "@/config/images";
 import { Container, SectionHeading } from "./ui";
 import { CheckCircle, Leaf } from "./Icons";
+import MascotPeek from "./MascotPeek";
 
 const highlights = [
   "Sweet, aromatic fruit",
@@ -14,7 +15,6 @@ export default function About() {
     <section id="about" className="py-20 sm:py-24">
       <Container>
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Image */}
           <div className="relative order-last lg:order-first">
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-leaf-100 shadow-soft ring-1 ring-black/5">
               <img
@@ -25,7 +25,6 @@ export default function About() {
                 decoding="async"
               />
             </div>
-            {/* Overlapping accent card */}
             <div className="absolute -bottom-6 -right-2 w-40 overflow-hidden rounded-2xl border-4 border-cream-50 shadow-lift sm:-right-6 sm:w-48">
               <div className="aspect-square">
                 <img
@@ -41,9 +40,9 @@ export default function About() {
               <Leaf className="h-4 w-4" />
               Well-rooted runners
             </span>
+            <MascotPeek pose="gardener" corner="br" size="lg" />
           </div>
 
-          {/* Copy */}
           <div>
             <SectionHeading
               align="left"
@@ -60,7 +59,7 @@ export default function About() {
               <p>
                 Our plants are supplied as healthy, well-rooted runners, ready to
                 settle into gardens, raised beds, tunnels or greenhouses. Whether
-                you&apos;re filling a few pots on a patio or planting out a
+                you're filling a few pots on a patio or planting out a
                 commercial block, Sweet Charlie is a forgiving, productive choice.
               </p>
             </div>
