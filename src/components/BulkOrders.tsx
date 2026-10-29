@@ -2,6 +2,7 @@ import config from "@/config/site";
 import { images } from "@/config/images";
 import { Container, LinkButton } from "./ui";
 import { CheckCircle, Package } from "./Icons";
+import MascotPeek from "./MascotPeek";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
 
 const points = [
@@ -68,6 +69,7 @@ export default function BulkOrders() {
               <p className="text-2xl font-bold text-berry-600">R10 each</p>
               <p className="text-xs font-medium text-bark-400">1000+ plants volume rate</p>
             </div>
+            <MascotPeek pose="proud" corner="br" size="lg" />
           </div>
         </div>
       </Container>
